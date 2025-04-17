@@ -1,0 +1,175 @@
+{% extends "hello/layout.html" %}
+
+{% block title %}Quiz Results - Solar Training Platform{% endblock %}
+
+{% block content %}
+<div class="results-container">
+    <div class="results-header">
+        <h1>Quiz Results: {{ quiz.title }}</h1>
+    </div>
+    
+    <div class="results-card">
+        <div class="score-summary">
+            <div class="score-display">
+                <div class="score-circle {% if score == max_score %}perfect{% elif score >= max_score|divisibleby:2 %}passing{% else %}failing{% endif %}">
+                    <div class="score-number">{{ score }}/{{ max_score }}</div>
+                </div>
+                <div class="score-percentage">{{ score|divisibleby:max_score|floatformat:1 }}%</div>
+            </div>
+            
+            <div class="score-message">
+                {% if score == max_score %}
+                <h2>Perfect Score!</h2>
+                <p>Excellent work! You've mastered this content.</p>
+                {% elif score >= max_score|divisibleby:2 %}
+                <h2>Good Job!</h2>
+                <p>You've passed the quiz and demonstrated your understanding.</p>
+                {% else %}
+                <h2>Keep Learning</h2>
+                <p>You might want to review the lesson material and try again.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="rewards-info">
+            <div class="xp-earned">
+                <h3>Rewards</h3>
+                <p>You earned <strong>{{ xp_earned }} XP</strong> for this quiz attempt!</p>
+                
+                {% if leveled_up %}
+                <div class="level-up-message">
+                    <span class="level-up-badge">LEVEL UP!</span>
+                    <p>Congratulations! You've reached <strong>Level {{ new_level }}</strong>!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="results-actions">
+            <a href="{% url 'lesson_view' lesson.id %}" class="btn lesson-btn">Return to Lesson</a>
+            <a href="{% url 'course_detail' lesson.module.course.id %}" class="btn course-btn">Back to Course</a>
+            <a href="{% url 'dashboard_direct' %}" class="btn dashboard-btn">Go to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.results-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.results-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.results-card {
+    background-color: white;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.score-summary {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.score-display {
+    text-align: center;
+}
+
+.score-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.score-circle.perfect {
+    background-color: #4CAF50;
+}
+
+.score-circle.passing {
+    background-color: #2196F3;
+}
+
+.score-circle.failing {
+    background-color: #f44336;
+}
+
+.score-message {
+    flex: 1;
+}
+
+.score-message h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.rewards-info {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.level-up-message {
+    margin-top: 15px;
+    background-color: #ffc107;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.level-up-badge {
+    display: inline-block;
+    background-color: #ff9800;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.results-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.lesson-btn {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.course-btn {
+    background-color: #2196F3;
+    color: white;
+}
+
+.dashboard-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+</style>
+{% endblock %}

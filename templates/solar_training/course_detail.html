@@ -1,0 +1,168 @@
+{% extends "hello/layout.html" %}
+
+{% block title %}{{ course.title }} - Solar Training Platform{% endblock %}
+
+{% block content %}
+<div class="course-detail">
+    <div class="course-header">
+        {% if course.image %}
+        <div class="course-image">
+            <img src="{{ course.image.url }}" alt="{{ course.title }}">
+        </div>
+        {% endif %}
+        <div class="course-info">
+            <h1>{{ course.title }}</h1>
+            <div class="course-description">
+                <p>{{ course.description }}</p>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-bar">
+                    <div class="progress" style="width: {{ progress.completed|yesno:'100,0' }}%"></div>
+                </div>
+                <div class="progress-text">
+                    {% if progress.completed %}
+                    Completed
+                    {% else %}
+                    In Progress
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modules-list">
+        <h2>Course Content</h2>
+        
+        {% for module in modules %}
+        <div class="module">
+            <div class="module-header">
+                <h3>{{ module.title }}</h3>
+                <div class="module-description">{{ module.description }}</div>
+            </div>
+            
+            <div class="lessons-list">
+                {% for lesson in module.lessons.all %}
+                <div class="lesson-item">
+                    <a href="{% url 'lesson_view' lesson.id %}" class="lesson-link">
+                        <div class="lesson-title">{{ lesson.title }}</div>
+                        {% if lesson.quiz %}
+                        <div class="lesson-quiz-indicator">
+                            <span class="quiz-badge">Quiz</span>
+                        </div>
+                        {% endif %}
+                    </a>
+                </div>
+                {% empty %}
+                <p class="no-lessons">No lessons available in this module yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+        {% empty %}
+        <p>No modules available for this course yet.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.course-detail {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.course-header {
+    display: flex;
+    margin-bottom: 30px;
+    gap: 30px;
+}
+
+.course-image {
+    width: 300px;
+    min-width: 300px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.course-image img {
+    width: 100%;
+    height: auto;
+}
+
+.course-info {
+    flex: 1;
+}
+
+.course-info h1 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.progress-indicator {
+    margin-top: 20px;
+}
+
+.progress-bar {
+    background-color: #ddd;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress {
+    background-color: #4CAF50;
+    height: 100%;
+}
+
+.progress-text {
+    margin-top: 5px;
+    font-size: 0.9em;
+}
+
+.modules-list {
+    margin-top: 30px;
+}
+
+.module {
+    margin-bottom: 30px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.module-header {
+    margin-bottom: 15px;
+}
+
+.module-header h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.lesson-item {
+    background-color: white;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+}
+
+.lesson-item:hover {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.lesson-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.quiz-badge {
+    background-color: #5bc0de;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.8em;
+}
+</style>
+{% endblock %}

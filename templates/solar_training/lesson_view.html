@@ -1,0 +1,145 @@
+{% extends "hello/layout.html" %}
+
+{% block title %}{{ lesson.title }} - Solar Training Platform{% endblock %}
+
+{% block content %}
+<div class="lesson-container">
+    <div class="lesson-navigation">
+        <div class="course-breadcrumb">
+            <a href="{% url 'course_list' %}">Courses</a> &gt; 
+            <a href="{% url 'course_detail' course.id %}">{{ course.title }}</a> &gt; 
+            <a href="{% url 'course_detail' course.id %}#module-{{ module.id }}">{{ module.title }}</a> &gt; 
+            <span>{{ lesson.title }}</span>
+        </div>
+    </div>
+    
+    <div class="lesson-header">
+        <h1>{{ lesson.title }}</h1>
+    </div>
+    
+    <div class="lesson-content">
+        {% if lesson.video_url %}
+        <div class="lesson-video">
+            <iframe width="100%" height="450" src="{{ lesson.video_url }}" frameborder="0" allowfullscreen></iframe>
+        </div>
+        {% endif %}
+        
+        <div class="lesson-text">
+            {{ lesson.content|safe }}
+        </div>
+    </div>
+    
+    <div class="lesson-actions">
+        {% if not completed %}
+        <form method="post" action="{% url 'complete_lesson' lesson.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn complete-btn">Mark as Completed</button>
+        </form>
+        {% else %}
+        <div class="completed-message">
+            <span>✓ You have completed this lesson</span>
+        </div>
+        {% endif %}
+        
+        {% if has_quiz %}
+        <a href="{% url 'quiz_view' lesson.quiz.id %}" class="btn quiz-btn">Take Quiz</a>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.lesson-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.lesson-navigation {
+    margin-bottom: 20px;
+}
+
+.course-breadcrumb {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.course-breadcrumb a {
+    color: #666;
+    text-decoration: none;
+}
+
+.course-breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.lesson-header {
+    margin-bottom: 30px;
+}
+
+.lesson-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.lesson-video {
+    margin-bottom: 30px;
+}
+
+.lesson-text {
+    line-height: 1.6;
+}
+
+.lesson-text h2 {
+    margin-top: 30px;
+}
+
+.lesson-text img {
+    max-width: 100%;
+    height: auto;
+}
+
+.lesson-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+}
+
+.complete-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.complete-btn:hover {
+    background-color: #45a049;
+}
+
+.quiz-btn {
+    background-color: #5bc0de;
+    color: white;
+}
+
+.quiz-btn:hover {
+    background-color: #46b8da;
+}
+
+.completed-message {
+    display: inline-block;
+    background-color: #dff0d8;
+    color: #3c763d;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+</style>
+{% endblock %}

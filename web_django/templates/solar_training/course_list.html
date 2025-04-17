@@ -1,0 +1,28 @@
+{% extends "hello/layout.html" %}
+
+{% block title %}Courses - Solar Training Platform{% endblock %}
+
+{% block content %}
+<div class="courses">
+    <h1>Solar Energy Training Courses</h1>
+    
+    <div class="course-list">
+        {% for course in courses %}
+        <div class="course-card">
+            {% if course.image %}
+            <div class="course-image">
+                <img src="{{ course.image.url }}" alt="{{ course.title }}">
+            </div>
+            {% endif %}
+            <div class="course-content">
+                <h2>{{ course.title }}</h2>
+                <p>{{ course.description|truncatewords:30 }}</p>
+                <a href="{% url 'course_detail' course.id %}" class="button">View Course</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No courses available yet. Please check back later.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "hello/layout.html" %}
+
+{% block title %}Leaderboard - Solar Training Platform{% endblock %}
+
+{% block content %}
+<div class="leaderboard">
+    <h1>Leaderboard</h1>
+    
+    <div class="leaderboard-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>User</th>
+                    <th>Level</th>
+                    <th>XP Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profile in top_users %}
+                <tr {% if profile.user.id == user.id %}class="current-user"{% endif %}>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ profile.user.username }}</td>
+                    <td>{{ profile.level }}</td>
+                    <td>{{ profile.xp_points }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No users yet!</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="leaderboard-footer">
+        <a href="{% url 'dashboard' %}" class="button secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}
